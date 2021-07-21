@@ -20,9 +20,10 @@ namespace OmegelSpamBot
 
         public static void begin()
         {
-            IWebDriver wb = new ChromeDriver();
+            ChromeOptions option = new ChromeOptions();
+            option.AddArgument("--headless");
+            IWebDriver wb = new ChromeDriver(option);
             wb.Navigate().GoToUrl(url);
-
             
             try
             {
@@ -31,7 +32,10 @@ namespace OmegelSpamBot
             }
             catch
             {
-                Console.WriteLine("No Text button found.");
+                if (!Sentance.IsTyping)
+                {
+                    Console.WriteLine("No Text button found.");
+                }
             }
             try
             {
@@ -44,23 +48,42 @@ namespace OmegelSpamBot
             }
             catch
             {
-                Console.WriteLine("Verification failed.");
+                if (!Sentance.IsTyping)
+                {
+                    Console.WriteLine("Verification failed.");
+                }
+                
             }
+            int numberOfTimesSent1 = 1;
+            int numberOfTimesSent2 = 1;
             while (true)
-            {
+            {   
                 try
                 {
                     new WebDriverWait(wb, TimeSpan.FromSeconds(20)).Until(ExpectedConditions.ElementToBeClickable(By.XPath("/html/body/div[5]/div/div/div[2]/table/tbody/tr/td[2]/div/textarea"))).SendKeys(sentance1);
+                    if (!Sentance.IsTyping)
+                    {
+                        Console.WriteLine($"\nMessage 1 sent with the content of '{sentance1}'. Message 1 has been sent '{numberOfTimesSent1}' times\n");
+                    }
+                    numberOfTimesSent1++;
                     var send = wb.FindElement(By.XPath("/html/body/div[5]/div/div/div[2]/table/tbody/tr/td[3]/div/button"));
                     send.Click();
                     Thread.Sleep(1000);
                     var box = wb.FindElement(By.XPath("/html/body/div[5]/div/div/div[2]/table/tbody/tr/td[2]/div/textarea"));
                     box.SendKeys(sentance2);
+                    if (!Sentance.IsTyping)
+                    {
+                        Console.WriteLine($"\nMessage 2 sent with the content of '{sentance2}'. Message 2 has been sent '{numberOfTimesSent2}' times\n");
+                    }
+                    numberOfTimesSent2++;
                     send.Click();
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"sending message failed\n\n {e}");
+                    if (!Sentance.IsTyping)
+                    {
+                        Console.WriteLine($"sending message failed\n\n {e}");
+                    }
                 }
                 Thread.Sleep(5000);
                 try
@@ -74,7 +97,10 @@ namespace OmegelSpamBot
                 }
                 catch
                 {
-                    Console.WriteLine("searching for new chat failed");
+                    if (!Sentance.IsTyping)
+                    {
+                        Console.WriteLine("searching for new chat failed");
+                    }
                 }
             }
         }

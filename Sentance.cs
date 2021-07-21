@@ -13,25 +13,35 @@ namespace OmegelSpamBot
 {
     class Sentance
     {
+        public static bool IsTyping = false;
+
         public static void correction()
         {
             while (true)
             {
-                Console.WriteLine("Type 'new' if you want to change the sentances");
+                Thread.Sleep(2000);
+                Console.Clear();
+                Console.WriteLine("Type 'new' if you want to change the sentances. Type 'quit' if you want to close the software.\n");
                 string response = Console.ReadLine();
                 if (response == "new")
                 {
+                    IsTyping = true;
                     Console.Clear();
                     Console.WriteLine("Enter new text for first sentance\n");
                     string FirstSentance = Console.ReadLine();
                     GetSite.sentance1 = FirstSentance;
-                    Console.WriteLine("\n\nSet\n\n");
-                    Console.WriteLine("Enter new text for second sentance");
+                    Console.WriteLine("Set\n");
+                    Console.WriteLine("Enter new text for second sentance\n");
                     string SecondSentance = Console.ReadLine();
                     GetSite.sentance2 = SecondSentance;
-                    Console.WriteLine("\n\nSet");
+                    Console.WriteLine("\nSet");
                     Thread.Sleep(1000);
                     Console.Clear();
+                    IsTyping = false;
+                }
+                else if (response == "quit")
+                {
+                    Environment.Exit(1);
                 }
             }
         }
